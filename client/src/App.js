@@ -8,7 +8,7 @@ class App extends Component {
   };
   
   componentDidMount() {
-    axios.get('/api/v1/say-something').then((res) => {
+    axios.get('/getBalance').then((res) => {
       const response = res.data;
       this.setState({response});
     });
@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Hello from the frontend!</h1>
-        <h1>{this.state.response.body}</h1>
+        <h1>{this.state.response.balance}</h1>
       </div>
     );
   }

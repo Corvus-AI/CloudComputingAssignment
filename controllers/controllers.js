@@ -1,7 +1,7 @@
-const saySomething = (req, res, next) => {
+const getBalance = (req, res, next) => {
     res.status(200).json({
-        body: 'Hello from the server!'
+        balance: 0
     });
 };
 
-module.exports.saySomething = saySomething;
+module.exports.getBalance = getBalance;
