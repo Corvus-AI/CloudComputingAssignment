@@ -3,11 +3,11 @@ const getBalance = (req, res, next) => {
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
-  host: "sql301.epizy.com",
-  user: "epiz_27542882",
-  password: "OfFcTSnXNa2LI",
+  host: "remotemysql.com",
+  user: "nGgOkH1PqW",
+  password: "CQBZveV1zb",
   port: "3306" ,
-  database: 'epiz_27542882_XXX'
+  database: 'nGgOkH1PqW'
 });
 
 con.connect(function(err) {
@@ -15,13 +15,13 @@ con.connect(function(err) {
   console.log("Connected!");
 });
 
-con.connect(function(err) {
+/* con.connect(function(err) {
     if (err) throw err;
     con.query("SELECT balance FROM bank where user= ", function (err, result, fields) {
       if (err) throw err;
       console.log(result);
     });
-  });
+  }); */
 
     res.status(200).json({
         balance: "Balance from Cloudant will be returned here"
