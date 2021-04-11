@@ -41,7 +41,7 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  var sql = "UPDATE Details SET Balance += 100 WHERE Username=\"test\" ";
+  var sql = "UPDATE Details SET Balance = Balance + 100 WHERE Username=\"test\" ";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log(result.affectedRows + " record(s) updated");
