@@ -1,4 +1,5 @@
 var bal = 0;
+var add = 0 ;
 
 const getBalance = (req, res, next) => {
 var mysql = require('mysql');
@@ -31,7 +32,11 @@ con.connect(function(err) {
 const addFunds = (req, res, next) => {
     /* TODO updating bank balance in Database */ 
 var mysql = require('mysql');
-add = 100 ;
+//console.log(req);
+console.log(req.query);
+// console.log(json(req.body));
+console.log(req.query.amount);
+add = req.query.amount;
 
 var con = mysql.createConnection({
   host: "remotemysql.com",
@@ -43,7 +48,7 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  var sql = "UPDATE Details SET Balance = Balance + 100 WHERE Username=\"test\" ";
+  var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Username=\"test\" ";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log(result.affectedRows + " record(s) updated");
