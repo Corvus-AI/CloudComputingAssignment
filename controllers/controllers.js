@@ -1,8 +1,7 @@
+var bal = 0;
 
 const getBalance = (req, res, next) => {
 var mysql = require('mysql');
-var bal ;
-
 var con = mysql.createConnection({
   host: "remotemysql.com",
   user: "nGgOkH1PqW",
@@ -16,13 +15,16 @@ con.connect(function(err) {
   console.log("Connected!");
   con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
   if (err) throw err;
-  bal = result;
+  console.log("inside bal:"+result[0].Balance);
+  
+  bal = result[0].Balance;
+  console.log("inside"+bal);
   console.log(result);
 });
 });
-
+    console.log("test"+bal)
     res.status(200).json({
-        balance: bal
+        balance : String(bal)
     });
 };
 

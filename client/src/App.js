@@ -5,7 +5,8 @@ import axios from 'axios'
 
 class Dashboard extends Component {
   state = {
-    addFunds:0
+    addFunds:0,
+    //balance:null
   };
 
   addFunds()
@@ -13,9 +14,16 @@ class Dashboard extends Component {
     alert("Funds added: "+ this.state.addFunds);
   }
   
+  componentDidMount() {
+    axios.get('/getBalance').then((res) => {
+      const response = res.data;
+      console.log("test "+response);
+      this.setState({balance : response.balance});
+    });
+  }
 
   render() {
-      var balance=0;
+      
       return(
         <Fragment>
         <header className="w3-container w3-theme w3-padding" id="myHeader">
@@ -26,7 +34,7 @@ class Dashboard extends Component {
         </header>
         <br />
         <div className="w3-center w3-display-top">
-        <h1 className="w3-xxlarge">Your current account balance is {balance}</h1>
+        <h1 className="w3-xxlarge">Your current account balance is {this.state.balance}</h1>
         </div>
         
         <div className="w3-center w3-display-middle">
@@ -49,16 +57,8 @@ class Dashboard extends Component {
 
 class App extends Component {
   state = {
-    response: {},
     isLoggedIn: true
   };
-  
-  componentDidMount() {
-    axios.get('/getBalance').then((res) => {
-      const response = res.data;
-      this.setState({response});
-    });
-  }
 
   render() {
     return (
