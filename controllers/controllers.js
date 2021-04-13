@@ -1,5 +1,7 @@
 var bal = 0;
 var add = 0 ;
+var new_user; 
+var user_email ;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -9,9 +11,10 @@ const getBalance = async(req, res, next) => {
 
 email = req.query.email;
 username = req.query.username ;
-  
+user_email = email ;
+ 
 var mysql = require('mysql');
-var con = mysql.createConnection({
+const con = mysql.createConnection({
   host: "remotemysql.com",
   user: "nGgOkH1PqW",
   password: "CQBZveV1zb",
@@ -23,21 +26,51 @@ con.connect( function(err) {
   if (err) throw err;
   console.log("Connected!");
 });
-
-
-con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
+await sleep(1000);
+console.log(email);
+await sleep(1000);
+con.query("SELECT count(Info) as count FROM Details where Info=\"" + email + "\"", function (err, result, fields) {
   if (err) throw err;
-  
-  bal = result[0].Balance;
-
-  console.log(result);
+  new_user = result[0].count ;
 });
+
+console.log("Count Completed , " , new_user);
+await sleep(1000);
+if(new_user==0|| new_user==undefined)
+{
+  var sql = "INSERT into Details values(0,NULL,NULL,\"" + email + "\") ";
+  con.query(sql, function (err, result) {
+  if (err) throw err;
+  console.log(result.affectedRows + " record(s) updated");
+  new_user=1
+  user_email = email ;
+  bal = 0 ;
+  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
+    try { bal = result[0].Balance;}
+    catch{
+      bal=0;
+    }
+    console.log(result);
+  });
+});
+}
+else{
+  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
+    try { bal = result[0].Balance;}
+    catch{
+      bal=0;
+    }
+    console.log(result);
+  });
+}
+
 
 await sleep(2500);
 
 res.status(200).json({
   balance : String(bal)
 });
+
 
 con.on('error', function(err) {
   console.log('db error', err);
@@ -58,7 +91,7 @@ function handleDisconnect() {
 };
 
 const addFunds = async(req, res, next) => {
-    /* TODO updating bank balance in Database */ 
+
 var mysql = require('mysql');
 //console.log(req);
 console.log(req.query);
@@ -78,14 +111,50 @@ con.connect(function(err) {
   if (err) throw err;
 });
 
+con.query("SELECT count(Info) as count FROM Details where Info=\"" + email + "\"", function (err, result, fields) {
+  if (err) throw err;
+  new_user = result[0].count ;
+});
 
-var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Username=\"test\" ";
+console.log("Count Completed , " , new_user);
+
+if(new_user==0|| new_user==undefined)
+{
+  var sql = "INSERT into Details values(0,NULL,NULL,\"" + email + "\") ";
+  con.query(sql, function (err, result) {
+  if (err) throw err;
+  console.log(result.affectedRows + " record(s) updated");
+  new_user=1
+  user_email = email ;
+  bal = 0 ;
+  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
+    try { bal = result[0].Balance;}
+    catch{
+      bal=0;
+    }
+    console.log(result);
+  });
+});
+}
+else{
+  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
+    try { bal = result[0].Balance;}
+    catch{
+      bal=0;
+    }
+    console.log(result);
+  });
+}
+await sleep(1000);
+console.log(user_email);
+var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Info=\"" + user_email +"\"";
+console.log(sql);
 con.query(sql, function (err, result) {
   if (err) throw err;
   console.log(result.affectedRows + " record(s) updated");
 });
 
-con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
+con.query("SELECT Balance FROM Details where Info=\"" + user_email + "\" ", function (err, result, fields) {
   if (err) throw err;
 console.log("inside bal:"+result[0].Balance); 
 bal = result[0].Balance;
