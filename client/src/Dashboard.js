@@ -49,7 +49,7 @@ class Dashboard extends Component {
         <header className="w3-container w3-theme w3-padding" id="myHeader">
         <button className="w3-button w3-theme w3-display-topright"> Logout</button>
         <div className="w3-center">
-        <h1 className="w3-xxxlarge w3-animate-bottom">Welcome, {this.state.username}</h1>
+        <h1 className="w3-xxxlarge w3-animate-bottom">Welcome, {this.state.name}</h1>
         </div>
         </header>
         <br />

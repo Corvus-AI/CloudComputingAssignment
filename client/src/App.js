@@ -53,6 +53,7 @@ class App extends Component {
             onFailure={(res)=>this.loginFailure(res)}
             cookiePolicy={'single_host_origin'}
             style={{marginTop:'100px'}}
+            isSignedIn={true}
 
           />
         </div>
