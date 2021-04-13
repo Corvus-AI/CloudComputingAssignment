@@ -6,13 +6,14 @@ import axios from 'axios'
 class Dashboard extends Component {
   state = {
     addFunds:0,
+    isBalanceLoaded:false,
     balance:null
   };
 
   addFunds()
   {
-    var oldFunds=this.state.addFunds;
-    alert("Funds added: "+ this.state.addFunds);
+    //var oldFunds=this.state.addFunds;
+    //alert("Funds added: "+ this.state.addFunds);
     axios.get('/addFunds',{params:{amount : this.state.addFunds}}).then((res) => {
       this.setState({addFunds : 0, balance: res.data.balance});
     });
@@ -22,11 +23,15 @@ class Dashboard extends Component {
     axios.get('/getBalance').then((res) => {
       const response = res.data;
       console.log("test "+response);
-      this.setState({balance : response.balance});
+      this.setState({balance : response.balance, isBalanceLoaded : true});
     });
   }
 
   render() {
+      if (!this.state.isBalanceLoaded)
+      {
+        return(<h1>Loading...</h1>);
+      }
       
       return(
         <Fragment>
