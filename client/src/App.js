@@ -1,79 +1,64 @@
 import React, { Component } from 'react';
-import {Fragment} from 'react';
 import './App.css';
-import axios from 'axios'
+import Dashboard from './Dashboard.js';
+import GoogleLogin from 'react-google-login';
 
-class Dashboard extends Component {
-  state = {
-    addFunds:0,
-    isBalanceLoaded:false,
-    balance:null
-  };
-
-  addFunds()
-  {
-    //var oldFunds=this.state.addFunds;
-    //alert("Funds added: "+ this.state.addFunds);
-    axios.get('/addFunds',{params:{amount : this.state.addFunds}}).then((res) => {
-      this.setState({addFunds : 0, balance: res.data.balance});
-    });
-  }
-  
-  componentDidMount() {
-    axios.get('/getBalance').then((res) => {
-      const response = res.data;
-      console.log("test "+response);
-      this.setState({balance : response.balance, isBalanceLoaded : true});
-    });
-  }
-
-  render() {
-      if (!this.state.isBalanceLoaded)
-      {
-        return(<h1>Loading...</h1>);
-      }
-      
-      return(
-        <Fragment>
-        <header className="w3-container w3-theme w3-padding" id="myHeader">
-        <button className="w3-button w3-theme w3-display-topright"> Logout</button>
-        <div className="w3-center">
-        <h1 className="w3-xxxlarge w3-animate-bottom">Welcome, User</h1>
-        </div>
-        </header>
-        <br />
-        <div className="w3-center w3-display-top">
-        <h1 className="w3-xxlarge">Your current account balance is {this.state.balance}</h1>
-        </div>
-        
-        <div className="w3-center w3-display-middle">
-        <form class="w3-container w3-card-4">
-        <h2>Add Funds</h2>
-        <div class="w3-section">      
-          <input class="w3-input" type="text" onChange={(e)=>this.setState({addFunds : e.target.value})}/>
-        </div>
-        <button className="w3-button w3-theme" onClick={()=>this.addFunds()}>Add</button>
-        </form>
-        </div>
-        
-
-        <br /><br />
-        </Fragment>
-      )
-    
-  }  
-}
+const clientId='705300019964-18i40pqvj6feqn1amqiuh2ic2msfbhqb.apps.googleusercontent.com'
 
 class App extends Component {
-  state = {
-    isLoggedIn: true
-  };
+  // state = {
+  //   isLoggedIn: false,
+  //   username: ''
+  // };
 
-  render() {
-    return (
-      
-      <Dashboard />
-    );
+  constructor(props)
+  {
+    super(props);
+    var username=localStorage.getItem('username');
+    if(username)
+    {
+      this.state={isLoggedIn: true, username: username};
+    }
+    else
+    {
+      this.state={isLoggedIn: false, username: null};
+    }
+  }
+
+  loginSuccess=(res) => {
+      console.log('Login Success: ',res.profileObj);
+      this.setState({isLoggedIn:true, username:res.profileObj.givenName, email: res.profileObj.email });
+  }
+
+  loginFailure=(res) => {
+    console.log('Login Failed: ',res);
+  }
+
+  render() 
+  {
+    if(this.state.isLoggedIn)
+    {
+      return(
+        <Dashboard username={this.state.username} email={this.state.email}/>
+      );
+    }
+    else
+    {
+      return(
+        <div className="w3-center">
+          <GoogleLogin 
+            clientId={clientId}
+            buttonText="Login using google"
+            onSuccess={(res)=>this.loginSuccess(res)}
+            onFailure={(res)=>this.loginFailure(res)}
+            cookiePolicy={'single_host_origin'}
+            style={{marginTop:'100px'}}
+
+          />
+        </div>
+      );
+    }
+     
   }
 }
 
