@@ -5,12 +5,11 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function createUser(){
-
-
-}
-
 const getBalance = async(req, res, next) => {
+
+email = req.query.email;
+username = req.query.username ;
+  
 var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "remotemysql.com",
@@ -25,12 +24,15 @@ con.connect( function(err) {
   console.log("Connected!");
 });
 
+// con.query("SELECT count(*) FROM Details where Info=" + email, function (err, result, fields) {
+//   console.log(result[0]);
+// });
+
 con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
   if (err) throw err;
-  console.log("inside bal:"+result[0].Balance);
   
   bal = result[0].Balance;
-  console.log("inside"+bal);
+
   console.log(result);
 });
 
@@ -101,7 +103,7 @@ res.status(200).json({
 
 con.on('error', function(err) {
   console.log('db error', err);
-  if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+  if(err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') { // Connection to the MySQL server is usually
     handleDisconnect();                        // lost due to either server restart, or a
   } else {                                      // connnection idle timeout (the wait_timeout
     throw err;                                  // server variable configures this)
