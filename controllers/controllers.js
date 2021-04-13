@@ -96,11 +96,12 @@ function handleDisconnect() {
 
 const addFunds = async(req, res, next) => {
 
+//console.log(req);
 var mysql = require('mysql');
-console.log(req.query.amount);
-console.log(req.query.email);
-add = req.query.amount;
-email = req.query.email;
+console.log(req.body.amount);
+console.log(req.body.email);
+add = req.body.amount;
+email = req.body.email;
 
 var con = mysql.createConnection({
   host: "remotemysql.com",

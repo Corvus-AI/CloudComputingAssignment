@@ -30,7 +30,7 @@ class Dashboard extends Component {
   {
     //var oldFunds=this.state.addFunds;
     //alert("Funds added: "+ this.state.addFunds);
-    axios.get('/addFunds',{params:{amount : this.state.addFunds, email : this.state.email, token:this.state.token}}).then((res) => {
+    axios.put('/addFunds',{amount : this.state.addFunds, email : this.state.email, token:this.state.token}).then((res) => {
       this.setState({addFunds : 0, balance: res.data.balance});
     });
   }
