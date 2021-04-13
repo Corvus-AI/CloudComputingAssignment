@@ -42,6 +42,15 @@ class Dashboard extends Component {
     });
   }
 
+  logout = () => {
+    this.setState({addFunds:0,
+        isBalanceLoaded:false,
+        balance:null,
+        name:this.props.username,
+        email:this.props.email});
+    this.props.handler();
+  }
+
   render() {
       if (!this.state.isBalanceLoaded)
       {
@@ -56,7 +65,7 @@ class Dashboard extends Component {
             <GoogleLogout
                 clientId={clientId}
                 buttonText="Logout"
-                onLogoutSuccess={()=>this.props.handler()}
+                onLogoutSuccess={()=>this.logout()}
             >
             </GoogleLogout>
         </div>
