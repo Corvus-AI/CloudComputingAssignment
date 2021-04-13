@@ -21,7 +21,8 @@ class Dashboard extends Component {
         isBalanceLoaded:false,
         balance:null,
         name:this.props.username,
-        email:this.props.email
+        email:this.props.email,
+        token:this.props.token
       }
   }
 
@@ -29,13 +30,13 @@ class Dashboard extends Component {
   {
     //var oldFunds=this.state.addFunds;
     //alert("Funds added: "+ this.state.addFunds);
-    axios.get('/addFunds',{params:{amount : this.state.addFunds},email : this.state.email}).then((res) => {
+    axios.get('/addFunds',{params:{amount : this.state.addFunds, email : this.state.email, token:this.state.token}}).then((res) => {
       this.setState({addFunds : 0, balance: res.data.balance});
     });
   }
   
   componentDidMount() {
-    axios.get('/getBalance',{params:{email : this.state.email}}).then((res) => {
+    axios.get('/getBalance',{params:{email : this.state.email, token: this.state.token}}).then((res) => {
       const response = res.data;
       //console.log("test "+response);
       this.setState({balance : response.balance, isBalanceLoaded : true});

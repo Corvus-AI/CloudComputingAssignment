@@ -41,7 +41,8 @@ class App extends Component {
 
   loginSuccess=(res) => {
       console.log('Login Success: ',res.profileObj);
-      this.setState({isLoggedIn:true, username:res.profileObj.givenName, email: res.profileObj.email });
+      console.log('Token info: ',res.tokenObj);
+      this.setState({isLoggedIn:true, username:res.profileObj.givenName, email: res.profileObj.email, token: res.tokenObj.id_token });
       refreshTokenSetup(res);
     }
 
@@ -60,7 +61,7 @@ class App extends Component {
     if(this.state.isLoggedIn)
     {
       return(
-        <Dashboard username={this.state.username} email={this.state.email} handler={this.logoutHandler}/>
+        <Dashboard username={this.state.username} email={this.state.email} handler={this.logoutHandler} token={this.state.token}/>
       );
     }
     else
