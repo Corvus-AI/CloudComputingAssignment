@@ -26,16 +26,22 @@ con.connect( function(err) {
   if (err) throw err;
   console.log("Connected!");
 });
+
 await sleep(1000);
+
 console.log(email);
+
 await sleep(1000);
+
 con.query("SELECT count(Info) as count FROM Details where Info=\"" + email + "\"", function (err, result, fields) {
   if (err) throw err;
   new_user = result[0].count ;
 });
 
 console.log("Count Completed , " , new_user);
+
 await sleep(1000);
+
 if(new_user==0|| new_user==undefined)
 {
   var sql = "INSERT into Details values(0,NULL,NULL,\"" + email + "\") ";
@@ -43,7 +49,6 @@ if(new_user==0|| new_user==undefined)
   if (err) throw err;
   console.log(result.affectedRows + " record(s) updated");
   new_user=1
-
   bal = 0 ;
   con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
     try { bal = result[0].Balance;}
@@ -71,9 +76,8 @@ res.status(200).json({
   balance : String(bal)
 });
 
-
 con.on('error', function(err) {
-  console.log('db error', err);
+  console.log('db error');
   if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
     handleDisconnect();                        // lost due to either server restart, or a
   } else {                                      // connnection idle timeout (the wait_timeout
@@ -84,7 +88,7 @@ con.on('error', function(err) {
 function handleDisconnect() {
   con.connect( function(err) {
     if (err) 
-    { console.log("Connection Error " , err ) ; setTimeout(handleDisconnect, 2000);   }
+    { console.log("Connection Error ") ; setTimeout(handleDisconnect, 2000);   }
     console.log("Connected!");
   }); }
 
@@ -93,10 +97,8 @@ function handleDisconnect() {
 const addFunds = async(req, res, next) => {
 
 var mysql = require('mysql');
-//console.log(req);
-console.log(req.query);
-// console.log(json(req.body));
 console.log(req.query.amount);
+console.log(req.query.email);
 add = req.query.amount;
 email = req.query.email;
 
@@ -115,6 +117,7 @@ con.connect(function(err) {
 await sleep(1000);
 
 console.log(email);
+
 var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Info=\"" + email +"\"";
 console.log(sql);
 con.query(sql, function (err, result) {
@@ -122,12 +125,13 @@ con.query(sql, function (err, result) {
   console.log(result.affectedRows + " record(s) updated");
 });
 
+await sleep(1000);
+
 con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", function (err, result, fields) {
   if (err) throw err;
 console.log("inside bal:"+result[0].Balance); 
 bal = result[0].Balance;
 });
-
 
 await sleep(2500);
 
@@ -136,7 +140,7 @@ res.status(200).json({
 });
 
 con.on('error', function(err) {
-  console.log('db error', err);
+  console.log('db error');
   if(err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') { // Connection to the MySQL server is usually
     handleDisconnect();                        // lost due to either server restart, or a
   } else {                                      // connnection idle timeout (the wait_timeout
@@ -147,7 +151,7 @@ con.on('error', function(err) {
 function handleDisconnect() {
   con.connect( function(err) {
     if (err) 
-    { console.log("Connection Error " ) ; setTimeout(handleDisconnect, 2000);   }
+    { console.log("Connection Error ") ; setTimeout(handleDisconnect, 2000);   }
     console.log("Connected!");
   });
 }
