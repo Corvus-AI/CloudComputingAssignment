@@ -11,11 +11,10 @@ class Dashboard extends Component {
 
   addFunds()
   {
+    var oldFunds=this.state.addFunds;
     alert("Funds added: "+ this.state.addFunds);
     axios.get('/addFunds',{params:{amount : this.state.addFunds}}).then((res) => {
-      // var oldFund=
-      // alert("Funds added: "+ this.state.addFunds);
-      this.setState({addFunds : 0});
+      this.setState({addFunds : 0, balance: res.data.balance});
     });
   }
   
