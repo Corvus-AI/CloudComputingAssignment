@@ -53,9 +53,17 @@ con.connect(function(err) {
     if (err) throw err;
     console.log(result.affectedRows + " record(s) updated");
   });
+  con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
+    if (err) throw err;
+  console.log("inside bal:"+result[0].Balance); 
+  bal = result[0].Balance;
+}); 
+  
+
 });
+
     res.status(200).json({
-        balance: "Balance will be updated in Cloudant Database"
+        balance: String(bal)
     });
 };
 
