@@ -24,9 +24,6 @@ con.connect( function(err) {
   console.log("Connected!");
 });
 
-// con.query("SELECT count(*) FROM Details where Info=" + email, function (err, result, fields) {
-//   console.log(result[0]);
-// });
 
 con.query("SELECT Balance FROM Details where Username=\"test\" ", function (err, result, fields) {
   if (err) throw err;
