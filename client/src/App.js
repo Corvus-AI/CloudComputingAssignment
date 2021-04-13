@@ -32,6 +32,7 @@ class App extends Component {
 
   loginFailure=(res) => {
     console.log('Login Failed: ',res);
+    alert("Login Failed");
   }
 
   render() 
@@ -45,8 +46,8 @@ class App extends Component {
     else
     {
       return(
-        <div className="w3-center">
-          <GoogleLogin 
+        <div className="w3-display-middle">
+          <GoogleLogin
             clientId={clientId}
             buttonText="Login using google"
             onSuccess={(res)=>this.loginSuccess(res)}
