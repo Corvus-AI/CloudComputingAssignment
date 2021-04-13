@@ -1,7 +1,7 @@
 var bal = 0;
 var add = 0 ;
 var new_user; 
-var user_email ;
+
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -11,7 +11,7 @@ const getBalance = async(req, res, next) => {
 
 email = req.query.email;
 username = req.query.username ;
-user_email = email ;
+
  
 var mysql = require('mysql');
 const con = mysql.createConnection({
@@ -43,7 +43,7 @@ if(new_user==0|| new_user==undefined)
   if (err) throw err;
   console.log(result.affectedRows + " record(s) updated");
   new_user=1
-  user_email = email ;
+
   bal = 0 ;
   con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
     try { bal = result[0].Balance;}
@@ -98,6 +98,7 @@ console.log(req.query);
 // console.log(json(req.body));
 console.log(req.query.amount);
 add = req.query.amount;
+email = req.query.email;
 
 var con = mysql.createConnection({
   host: "remotemysql.com",
@@ -111,50 +112,17 @@ con.connect(function(err) {
   if (err) throw err;
 });
 
-con.query("SELECT count(Info) as count FROM Details where Info=\"" + email + "\"", function (err, result, fields) {
-  if (err) throw err;
-  new_user = result[0].count ;
-});
-
-console.log("Count Completed , " , new_user);
-
-if(new_user==0|| new_user==undefined)
-{
-  var sql = "INSERT into Details values(0,NULL,NULL,\"" + email + "\") ";
-  con.query(sql, function (err, result) {
-  if (err) throw err;
-  console.log(result.affectedRows + " record(s) updated");
-  new_user=1
-  user_email = email ;
-  bal = 0 ;
-  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
-    try { bal = result[0].Balance;}
-    catch{
-      bal=0;
-    }
-    console.log(result);
-  });
-});
-}
-else{
-  con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", async function (err, result, fields) {
-    try { bal = result[0].Balance;}
-    catch{
-      bal=0;
-    }
-    console.log(result);
-  });
-}
 await sleep(1000);
-console.log(user_email);
-var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Info=\"" + user_email +"\"";
+
+console.log(email);
+var sql = "UPDATE Details SET Balance = Balance + "+ add +" WHERE Info=\"" + email +"\"";
 console.log(sql);
 con.query(sql, function (err, result) {
   if (err) throw err;
   console.log(result.affectedRows + " record(s) updated");
 });
 
-con.query("SELECT Balance FROM Details where Info=\"" + user_email + "\" ", function (err, result, fields) {
+con.query("SELECT Balance FROM Details where Info=\"" + email + "\" ", function (err, result, fields) {
   if (err) throw err;
 console.log("inside bal:"+result[0].Balance); 
 bal = result[0].Balance;
