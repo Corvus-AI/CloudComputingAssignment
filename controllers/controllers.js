@@ -111,7 +111,7 @@ con.on('error', function(err) {
 function handleDisconnect() {
   con.connect( function(err) {
     if (err) 
-    { console.log("Connection Error " , err ) ; setTimeout(handleDisconnect, 2000);   }
+    { console.log("Connection Error " ) ; setTimeout(handleDisconnect, 2000);   }
     console.log("Connected!");
   });
 }
