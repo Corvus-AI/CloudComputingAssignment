@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {Fragment} from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import {GoogleLogout} from 'react-google-login';
+
+const clientId='705300019964-18i40pqvj6feqn1amqiuh2ic2msfbhqb.apps.googleusercontent.com'
+
 
 class Dashboard extends Component {
 //   state = {
@@ -47,7 +51,16 @@ class Dashboard extends Component {
       return(
         <Fragment>
         <header className="w3-container w3-theme w3-padding" id="myHeader">
-        <button className="w3-button w3-theme w3-display-topright"> Logout</button>
+        {/* <button className="w3-button w3-theme w3-display-topright"> Logout </button> */}
+        <div className="w3-display-topright">
+            <GoogleLogout
+                clientId={clientId}
+                buttonText="Logout"
+                onLogoutSuccess={()=>this.props.handler()}
+            >
+            </GoogleLogout>
+        </div>
+        <a href="https://us-south.functions.appdomain.cloud/api/v1/web/710d391e-642e-414a-9839-a58fec5d1efb/redirect/helloworld"><button className="w3-button w3-theme w3-display-topleft"> Redirect </button></a>
         <div className="w3-center">
         <h1 className="w3-xxxlarge w3-animate-bottom">Welcome, {this.state.name}</h1>
         </div>
