@@ -2,6 +2,9 @@ var bal = 0;
 var add = 0 ;
 var new_user; 
 
+const { OAuth2Client } = require('google-auth-library');
+const clientId='705300019964-18i40pqvj6feqn1amqiuh2ic2msfbhqb.apps.googleusercontent.com'
+const client = new OAuth2Client(clientId);
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -10,8 +13,19 @@ function sleep(ms) {
 const getBalance = async(req, res, next) => {
 
 email = req.query.email;
-username = req.query.username ;
+// username = req.query.username ;
+token = req.query.token ;
 
+const googleAuth = async(token) => {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: clientId,
+  });
+  const payload = ticket.getPayload();
+  console.log('User verified ' , payload.name);
+}
+
+googleAuth(token) ;
  
 var mysql = require('mysql');
 const con = mysql.createConnection({
@@ -95,7 +109,18 @@ function handleDisconnect() {
 };
 
 const addFunds = async(req, res, next) => {
+  token = req.body.token ;
 
+  const googleAuth = async(token) => {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: clientId,
+    });
+    const payload = ticket.getPayload();
+    console.log('User verified ' , payload.name);
+  }
+  
+  googleAuth(token) ;
 //console.log(req);
 var mysql = require('mysql');
 console.log(req.body.amount);
