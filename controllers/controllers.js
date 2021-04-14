@@ -1,6 +1,7 @@
 var bal = 0;
 var add = 0 ;
 var new_user; 
+var user_valid = 0 ;
 
 const { OAuth2Client } = require('google-auth-library');
 const clientId='705300019964-18i40pqvj6feqn1amqiuh2ic2msfbhqb.apps.googleusercontent.com'
@@ -15,7 +16,7 @@ const getBalance = async(req, res, next) => {
 email = req.query.email;
 // username = req.query.username ;
 token = req.query.token ;
-
+user_valid = 0 ;
 const googleAuth = async(token) => {
   const ticket = await client.verifyIdToken({
     idToken: token,
@@ -23,10 +24,15 @@ const googleAuth = async(token) => {
   });
   const payload = ticket.getPayload();
   console.log('User verified ' , payload.name);
+  user_valid = 1 ;
 }
 
-googleAuth(token) ;
- 
+await googleAuth(token) ;
+
+if(user_valid==0){
+  console.log("Google OAuth Failed") ; return
+}
+
 var mysql = require('mysql');
 const con = mysql.createConnection({
   host: "remotemysql.com",
@@ -111,16 +117,22 @@ function handleDisconnect() {
 const addFunds = async(req, res, next) => {
   token = req.body.token ;
 
-  const googleAuth = async(token) => {
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: clientId,
-    });
-    const payload = ticket.getPayload();
-    console.log('User verified ' , payload.name);
-  }
-  
-  googleAuth(token) ;
+  user_valid = 0 ;
+const googleAuth = async(token) => {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: clientId,
+  });
+  const payload = ticket.getPayload();
+  console.log('User verified ' , payload.name);
+  user_valid = 1 ;
+}
+
+await googleAuth(token) ;
+
+if(user_valid==0){
+  console.log("Google OAuth Failed") ; return
+}
 //console.log(req);
 var mysql = require('mysql');
 console.log(req.body.amount);
