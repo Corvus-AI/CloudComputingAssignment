@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && npm start",
     "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run client\" \"npm run server\"",
+    "dev": " npm install cd ./client && npm install && concurrently --kill-others-on-fail \"npm run client\" \"npm run server\" ",
     "client:build": "cd client && npm run build",
-    "start": "concurrently --kill-others-on-fail \"npm run client\" \"npm run server\""
+    "start": " npm install cd ./client && npm install && concurrently --kill-others-on-fail \"npm run client\" \"npm run server\" "
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
   "dependencies": {
     "@cloudant/cloudant": "^4.3.1",
     "body-parser": "^1.19.0",
+    "cd": "^0.3.3",
+    "client": "file:client",
     "concurrently": "^6.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
